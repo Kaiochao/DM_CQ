@@ -123,49 +123,102 @@ game/map/mover/gridded{
 		. = ..()
 		}
 	}
-client{
-	var/game/hero/hero
 
-	proc{
-		intelligence(var/game/map/mover/M){
-			if(!hero.projectile){
-				var/x_translate = 0
-				var/y_translate = 0
-				var/_check = key_state | key_pressed
-				//if(    (EAST  & _check) && (SHIFT & _check)){ hero.dir = EAST }
-				if(EAST  & _check){ x_translate += hero.speed}
-				//if(    (WEST  & _check) && (SHIFT & _check)){ hero.dir = WEST }
-				if(WEST  & _check){ x_translate -= hero.speed}
-				//if(    (NORTH & _check) && (SHIFT & _check)){ hero.dir = NORTH}
-				if(NORTH & _check){ y_translate += hero.speed}
-				//if(    (SOUTH & _check) && (SHIFT & _check)){ hero.dir = SOUTH}
-				if(SOUTH & _check){ y_translate -= hero.speed}
+#include "Gamepad.dm"
+
+client
+	var game/hero/hero
+
+	// Movement input. Each are either -1, 0, or 1. 
+	var input_x
+	var input_y
+
+	// Button inputs.
+	var input_primary
+	var input_secondary
+	var input_tertiary
+	var input_quaternary
+	var input_help
+
+	proc
+		check_inputs()
+			var key_dirs = key_state | key_pressed
+			
+			// Determine movement input from the keyboard.
+			input_x = !!(key_dirs & EAST) - !!(key_dirs & WEST)
+			input_y = !!(key_dirs & NORTH) - !!(key_dirs & SOUTH)
+
+			// Determine movement input from diagonal buttons.
+			if(!(input_x || input_y))
+				var northeast = GetButton("Northeast")
+				var northwest = GetButton("Northwest")
+				var southeast = GetButton("Southeast")
+				var southwest = GetButton("Southwest")
+				input_x = (northeast || southeast) - (northwest || southwest)
+				input_y = (northeast || northwest) - (southeast || southwest)
+
+			// Determine movement input from the gamepad. 
+			if(!(input_x || input_y))
+				// Read values from the left analog stick. 
+				input_x = GetLeftAnalogX()
+				input_y = GetLeftAnalogY()
+
+				// Deadzone
+				if(input_x * input_x + input_y * input_y < 0.04)
+					input_x = 0
+					input_y = 0
+
+				else
+					// "Round" to the nearest 8-direction ("improved general direction proc").
+					if(input_x && input_y)
+						var ax = abs(input_x)
+						var ay = abs(input_y)
+						if(ax >= ay * 2)
+							input_y = 0
+						else if(ay >= ax * 2)
+							input_x = 0
+
+					// Normalize inputs.
+					if(input_x)
+						input_x /= abs(input_x)
+					if(input_y)
+						input_y /= abs(input_y)
+			
+			// Determine button inputs. 
+			input_primary = !!(PRIMARY & key_pressed) || GetButton("GamepadFace1")
+			input_secondary = !!(SECONDARY & key_pressed) || GetButton("GamepadFace3")
+			input_tertiary = !!(TERTIARY & key_pressed) || GetButton("GamepadFace4")
+			input_quaternary = !!(QUATERNARY & key_pressed) || GetButton("GamepadFace2")
+			input_help = !!(HELP_KEY & key_pressed) || \
+				GetButton("GamepadL2") || \
+				GetButton("GamepadR2")
+			
+		intelligence(var/game/map/mover/M)
+			if(!hero.projectile)
+				// Move according to the movement inputs and the hero's speed.
+				var x_translate = input_x * hero.speed
+				var y_translate = input_y * hero.speed
 				M.px_move(x_translate, y_translate)
-				if(PRIMARY & key_pressed){          hero.shoot() }
-				else if(SECONDARY & key_pressed && (hero.skill1)){
-					if(hero.aura >= hero.skill1_cost){
+
+				// Respond to button inputs.
+				if(input_primary)
+					hero.shoot()
+				else if(input_secondary && hero.skill1)
+					if(hero.aura >= hero.skill1_cost)
 						hero.adjust_aura(-hero.skill1_cost)
 						var/game/hero/skill/skill1 = new hero.skill1(hero)
 						skill1.activate()
-						}
-					}
-				else if(TERTIARY & key_pressed && (hero.skill2)){
-					if(hero.aura >= hero.skill2_cost){
+				else if(input_tertiary && hero.skill2)
+					if(hero.aura >= hero.skill2_cost)
 						hero.adjust_aura(-hero.skill2_cost)
 						var/game/hero/skill/skill2 = new hero.skill2(hero)
 						skill2.activate()
-						}
-					}
-				else if(QUATERNARY & key_pressed && (hero.skill3)){
-					if(hero.aura >= hero.skill3_cost){
+				else if(input_quaternary && hero.skill3)
+					if(hero.aura >= hero.skill3_cost)
 						hero.adjust_aura(-hero.skill3_cost)
 						var/game/hero/skill/skill3 = new hero.skill3(hero)
 						skill3.activate()
-						}
-					}
-				else if(HELP_KEY & key_pressed){ hero.call_help()}
-				}
+				else if(input_help)
+					hero.call_help()
+
 			clear_keys()
-			}
-		}
-	}

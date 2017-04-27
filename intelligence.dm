@@ -61,14 +61,11 @@ game/map/mover/intelligence{
 			var/game/hero/H = mover
 			if(!istype(H)){ finish()}
 			if(H.player){
-				if(EAST  & (H.player.key_state | H.player.key_pressed)){ finish()}
-				if(WEST  & (H.player.key_state | H.player.key_pressed)){ finish()}
-				if(NORTH & (H.player.key_state | H.player.key_pressed)){ finish()}
-				if(SOUTH & (H.player.key_state | H.player.key_pressed)){ finish()}
-				if(PRIMARY    & H.player.key_pressed){ finish()}
-				if(SECONDARY  & H.player.key_pressed){ finish()}
-				if(TERTIARY   & H.player.key_pressed){ finish()}
-				if(QUATERNARY & H.player.key_pressed){ finish()}
+				if(H.player.input_x || H.player.input_y || \
+						H.player.input_primary || H.player.input_secondary || \
+						H.player.input_tertiary || H.player.input_quaternary){
+					finish()
+					}
 				}
 			}
 		proc{

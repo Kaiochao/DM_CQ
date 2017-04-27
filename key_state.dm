@@ -67,6 +67,7 @@ client{
 			}
 		clear_keys(save_buttons){
 			key_pressed = 0
+			ClearGamepadInputs()
 			//keys_stick = 0
 			//key_state = 0
 			}

@@ -934,13 +934,10 @@ game/hero/projectile{
 				if(istype(owner) && istype(owner.player)){
 					var/game/hero/owner_hero = owner
 					owner_hero.icon_state = "cast"
-					var/x_translate = 0
-					var/y_translate = 0
-					if     (EAST  & (owner.player.key_state | owner.player.key_pressed)){ dir = EAST }
-					else if(WEST  & (owner.player.key_state | owner.player.key_pressed)){ dir = WEST }
-					else if(NORTH & (owner.player.key_state | owner.player.key_pressed)){ dir = NORTH}
-					else if(SOUTH & (owner.player.key_state | owner.player.key_pressed)){ dir = SOUTH}
-					px_move(x_translate, y_translate)
+					if     (owner.player.input_x > 0){ dir = EAST }
+					else if(owner.player.input_x < 0){ dir = WEST }
+					else if(owner.player.input_y > 0){ dir = NORTH}
+					else if(owner.player.input_y < 0){ dir = SOUTH}
 					owner.player.clear_keys()
 					}
 				var/coord/old_center = new(c.x+width/2, c.y+height/2)
@@ -1078,17 +1075,11 @@ game/hero/projectile{
 				if(istype(owner) && istype(owner.player)){
 					var/game/hero/owner_hero = owner
 					owner_hero.icon_state = "cast"
-					var/x_translate = 0
-					var/y_translate = 0
-					if(EAST  & (owner.player.key_state | owner.player.key_pressed)){ x_translate += speed}
-					if(WEST  & (owner.player.key_state | owner.player.key_pressed)){ x_translate -= speed}
-					if(NORTH & (owner.player.key_state | owner.player.key_pressed)){ y_translate += speed}
-					if(SOUTH & (owner.player.key_state | owner.player.key_pressed)){ y_translate -= speed}
+					var/x_translate = owner.player.input_x * speed
+					var/y_translate = owner.player.input_y * speed
 					px_move(x_translate, y_translate)
-					if(PRIMARY & owner.player.key_pressed){         finish()}
-					else if(SECONDARY & owner.player.key_pressed){  finish()}
-					else if(TERTIARY & owner.player.key_pressed){   finish()}
-					else if(QUATERNARY & owner.player.key_pressed){ finish()}
+					if(owner.player.input_primary || owner.player.input_secondary || \
+							owner.player.input_tertiary || owner.player.input_quaternary) { finish() }
 					owner.player.clear_keys()
 					}
 				}

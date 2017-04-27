@@ -234,6 +234,7 @@ game/map/mover{
 		}
 	proc{
 		take_turn(){
+			if(istype(player)) player.check_inputs()
 			if(intelligence){
 				if(hascall(intelligence, "intelligence")){
 					call(intelligence, "intelligence")(src)

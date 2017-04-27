@@ -341,6 +341,114 @@ macro "macro"
 		name = "F10"
 		command = ".wave"
 		is-disabled = false
+	elem
+		name = "GamepadLeftAnalog"
+		command = ".gamepad-left-analog [[x]] [[y]]"
+		is-disabled = false
+	elem
+		name = "GamepadL1"
+		command = ".button-press GamepadL1"
+		is-disabled = false
+	elem
+		name = "GamepadL2"
+		command = ".button-press GamepadL2"
+		is-disabled = false
+	elem
+		name = "GamepadR1"
+		command = ".button-press GamepadR1"
+		is-disabled = false
+	elem
+		name = "GamepadR2"
+		command = ".button-press GamepadR2"
+		is-disabled = false
+	elem
+		name = "GamepadFace1"
+		command = ".button-press GamepadFace1"
+		is-disabled = false
+	elem
+		name = "GamepadFace2"
+		command = ".button-press GamepadFace2"
+		is-disabled = false
+	elem
+		name = "GamepadFace3"
+		command = ".button-press GamepadFace3"
+		is-disabled = false
+	elem
+		name = "GamepadFace4"
+		command = ".button-press GamepadFace4"
+		is-disabled = false
+	elem
+		name = "GamepadL1+Up"
+		command = ".button-release GamepadL1"
+		is-disabled = false
+	elem
+		name = "GamepadL2+Up"
+		command = ".button-release GamepadL2"
+		is-disabled = false
+	elem
+		name = "GamepadR1+Up"
+		command = ".button-release GamepadR1"
+		is-disabled = false
+	elem
+		name = "GamepadR2+Up"
+		command = ".button-release GamepadR2"
+		is-disabled = false
+	elem
+		name = "GamepadFace1+Up"
+		command = ".button-release GamepadFace1"
+		is-disabled = false
+	elem
+		name = "GamepadFace2+Up"
+		command = ".button-release GamepadFace2"
+		is-disabled = false
+	elem
+		name = "GamepadFace3+Up"
+		command = ".button-release GamepadFace3"
+		is-disabled = false
+	elem
+		name = "GamepadFace4+Up"
+		command = ".button-release GamepadFace4"
+		is-disabled = false
+	elem
+		name = "GamepadSelect"
+		command = ".spectate"
+		is-disabled = false
+	elem
+		name = "GamepadStart"
+		command = ".join"
+		is-disabled = false
+	elem
+		name = "Northeast"
+		command = ".button-press Northeast"
+		is-disabled = false
+	elem
+		name = "Northwest"
+		command = ".button-press Northwest"
+		is-disabled = false
+	elem
+		name = "Southeast"
+		command = ".button-press Southeast"
+		is-disabled = false
+	elem
+		name = "Southwest"
+		command = ".button-press Southwest"
+		is-disabled = false
+	elem
+		name = "Northeast+Up"
+		command = ".button-release Northeast"
+		is-disabled = false
+	elem
+		name = "Northwest+Up"
+		command = ".button-release Northwest"
+		is-disabled = false
+	elem
+		name = "Southeast+Up"
+		command = ".button-release Southeast"
+		is-disabled = false
+	elem
+		name = "Southwest+Up"
+		command = ".button-release Southwest"
+		is-disabled = false
 
 
 menu "main_menu"
